@@ -1,0 +1,25 @@
+{
+  "name": "cordova-plugin-doc-scanner",
+  "version": "0.0.1",
+  "description": "Cordova plugin for scanning documents.",
+  "cordova": {
+    "id": "cordova-plugin-doc-scanner",
+    "platforms": [
+      "ios"
+    ]
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Skydragonsz/cordova-plugin-document-scanner.git"
+  },
+  "keywords": [
+    "ecosystem:cordova",
+    "cordova-ios"
+  ],
+  "author": "Arthur Saprunov",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Skydragonsz/cordova-plugin-document-scanner/issues"
+  },
+  "homepage": "https://github.com/Skydragonsz/cordova-plugin-document-scanner#readme"
+}
