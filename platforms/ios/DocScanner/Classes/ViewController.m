@@ -7,6 +7,7 @@
 //
 #import "DocScanner.h"
 #import "ViewController.h"
+#import "ViewControllerPreview.h"
 #import "IPDFCameraViewController.h"
 #import <AVFoundation/AVFoundation.h>
 #import <MobileCoreServices/UTCoreTypes.h>
@@ -34,13 +35,7 @@
     [self.cameraViewController setupCameraView];
     [self.cameraViewController setEnableBorderDetection:YES];
 
-    //UITapGestureRecognizer *singleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(filterToggle)];
-    //singleTap.numberOfTapsRequired = 1;
-    //self.titleLabel.userInteractionEnabled = NO;
-    //[self.titleLabel addGestureRecognizer:singleTap];
-
     [self.cameraViewController setCameraViewType:IPDFCameraViewTypeNormal];
-    //[self updateTitleLabel];
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -93,9 +88,9 @@
 - (IBAction)borderDetectToggle:(id)sender
 {
     BOOL enable = !self.cameraViewController.isBorderDetectionEnabled;
-//    [self changeButton:sender targetTitle:(enable) ? @"CROP On" : @"CROP Off" toStateEnabled:enable];
+    //[self changeButton:sender targetTitle:(enable) ? @"CROP On" : @"CROP Off" toStateEnabled:enable];
+    [self changeButton:sender toStateEnabled:!enable]; //This is needed because selected is off.
     self.cameraViewController.enableBorderDetection = enable;
-    //[self updateTitleLabel];
 }
 
 - (void)filterToggle
@@ -109,30 +104,6 @@
     BOOL enable = !self.cameraViewController.isTorchEnabled;
     [self changeButton:sender toStateEnabled:enable];
     self.cameraViewController.enableTorch = enable;
-}
-
-- (void)updateTitleLabel
-{
-    CATransition *animation = [CATransition animation];
-    animation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
-    animation.type = kCATransitionPush;
-    animation.subtype = kCATransitionFromBottom;
-    animation.duration = 0.35;
-    [self.titleLabel.layer addAnimation:animation forKey:@"kCATransitionFade"];
-
-    NSTextAttachment *attachment = [[NSTextAttachment alloc] init];
-    attachment.image = [UIImage imageNamed:@"caret"];
-    attachment.bounds = CGRectMake(0, -8, 25, 25);
-    NSMutableAttributedString *attachmentString = [[NSMutableAttributedString alloc] initWithAttributedString:[NSAttributedString attributedStringWithAttachment:attachment]];
-
-    NSString *filterMode = (self.cameraViewController.cameraViewType != IPDFCameraViewTypeBlackAndWhite) ? @"Color " : @"Grayscale ";
-
-    NSMutableAttributedString *myFilterString= [[NSMutableAttributedString alloc] initWithString:filterMode];
-
-    [myFilterString appendAttributedString:attachmentString];
-
-    self.titleLabel.attributedText = myFilterString;
-//    self.titleLabel.text = [filterMode stringByAppendingFormat:@" | %@",(self.cameraViewController.isBorderDetectionEnabled)?@"AUTOCROP On":@"AUTOCROP Off"];
 }
 
 - (void)changeButton:(UIButton *)button toStateEnabled:(BOOL)enabled
@@ -182,9 +153,12 @@
 
 
         // Tell the plugin class that we're finished processing the image
-        ViewController *vc = [[ViewController alloc]initWithNibName:@"ViewController_Preview" bundle:nil];
-        [self presentViewController:vc animated:YES completion:nil];
-        //[self.plugin capturedImageWithPath:imageData];
+        // ViewController *vc = [[ViewController alloc]initWithNibName:@"ViewControllerPreview" bundle:nil];
+        // [self presentViewController:vc animated:YES completion:nil];
+        // ViewControllerPreview *viewControllerPre = [[ViewControllerPreview alloc] initWithNib:@"ViewControllerPreview" bundle:nil];
+        // viewControllerPre.imageData = imageData;
+        // [self pushViewController:viewControllerPre animated:YES];
+        [self.plugin capturedImageWithPath:imageData];
     }];
 }
 
@@ -196,16 +170,17 @@
     return YES;
 }
 
-- (void)dismissPreview:(UITapGestureRecognizer *)dismissTap
-{
-    [UIView animateWithDuration:0.7 delay:0.0 usingSpringWithDamping:0.8 initialSpringVelocity:1.0 options:UIViewAnimationOptionAllowUserInteraction animations:^
-    {
-        dismissTap.view.frame = CGRectOffset(self.view.bounds, 0, self.view.bounds.size.height);
-    }
-    completion:^(BOOL finished)
-    {
-        [dismissTap.view removeFromSuperview];
-    }];
-}
+//Not used anymore, still here for users that still want to enable this again.
+// - (void)dismissPreview:(UITapGestureRecognizer *)dismissTap
+// {
+//     [UIView animateWithDuration:0.7 delay:0.0 usingSpringWithDamping:0.8 initialSpringVelocity:1.0 options:UIViewAnimationOptionAllowUserInteraction animations:^
+//     {
+//         dismissTap.view.frame = CGRectOffset(self.view.bounds, 0, self.view.bounds.size.height);
+//     }
+//     completion:^(BOOL finished)
+//     {
+//         [dismissTap.view removeFromSuperview];
+//     }];
+// }
 
 @end

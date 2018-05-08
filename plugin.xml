@@ -29,6 +29,9 @@
     <header-file src="platforms/ios/DocScanner/Classes/ViewController.h" />
     <source-file src="platforms/ios/DocScanner/Classes/ViewController.m" />
 
+    <header-file src="platforms/ios/DocScanner/Classes/ViewControllerPreview.h" />
+    <source-file src="platforms/ios/DocScanner/Classes/ViewControllerPreview.m" />
+
     <header-file src="platforms/ios/DocScanner/Classes/DocScanner.h" />
     <source-file src="platforms/ios/DocScanner/Classes/DocScanner.m" />
 
@@ -47,6 +50,8 @@
     <source-file src="platforms/ios/DocScanner/Images.xcassets/closecamera.imageset/closecamera@2x.png" />
     <source-file src="platforms/ios/DocScanner/Images.xcassets/flashoff.imageset/flashoff@2x.png" />
     <source-file src="platforms/ios/DocScanner/Images.xcassets/flashon.imageset/flashon@2x.png" />
+    <source-file src="platforms/ios/DocScanner/Images.xcassets/cropon.imageset/cropon@2x.png" />
+    <source-file src="platforms/ios/DocScanner/Images.xcassets/cropoff.imageset/cropoff@2x.png" />
 
     <resource-file src="platforms/ios/DocScanner/Classes/Main.storyboard" />
 

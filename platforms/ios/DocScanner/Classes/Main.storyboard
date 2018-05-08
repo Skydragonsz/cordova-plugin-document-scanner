@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13771" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="vXZ-lx-hvc">
-    <device id="retina5_5" orientation="portrait">
+    <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
+        <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13772"/>
         <capability name="Alignment constraints with different attributes" minToolsVersion="5.1"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
@@ -19,20 +20,20 @@
                         <viewControllerLayoutGuide type="bottom" id="2fi-mo-0CV"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="kh9-bI-dsS">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="GCS-Ur-8wm" customClass="IPDFCameraViewController">
-                                <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                                 <subviews>
                                     <imageView hidden="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="focusIndicator.png" translatesAutoresizingMaskIntoConstraints="NO" id="ngc-U5-0Sq">
                                         <rect key="frame" x="0.0" y="0.0" width="75" height="75"/>
                                     </imageView>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="uJ6-Em-RcD" userLabel="Adjust Bar">
-                                        <rect key="frame" x="0.0" y="636" width="414" height="100"/>
+                                        <rect key="frame" x="0.0" y="597" width="375" height="70"/>
                                         <subviews>
                                             <button opaque="NO" alpha="0.69999998807907104" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Nrc-IK-eNd">
-                                                <rect key="frame" x="174" y="17" width="66" height="66"/>
+                                                <rect key="frame" x="155" y="2" width="66" height="66"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="66" id="KVV-dS-8Ja"/>
                                                     <constraint firstAttribute="width" constant="66" id="ggu-oL-3Xq"/>
@@ -42,11 +43,10 @@
                                                 </state>
                                                 <connections>
                                                     <action selector="captureButton:" destination="vXZ-lx-hvc" eventType="touchUpInside" id="9ai-i6-v1I"/>
-                                                    <segue destination="z23-MD-Bcw" kind="show" id="dlX-p6-vLg"/>
                                                 </connections>
                                             </button>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fWX-ZW-MSa">
-                                                <rect key="frame" x="361" y="38" width="25" height="25"/>
+                                                <rect key="frame" x="8" y="23" width="25" height="25"/>
                                                 <state key="normal" image="flashoff.png"/>
                                                 <state key="disabled" image="flashoff.png"/>
                                                 <state key="selected" image="flashon.png"/>
@@ -56,12 +56,27 @@
                                                     <action selector="torchToggle:" destination="vXZ-lx-hvc" eventType="touchUpInside" id="4HG-Hr-SSV"/>
                                                 </connections>
                                             </button>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4jI-XK-PzI">
+                                                <rect key="frame" x="342" y="23" width="25" height="25"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="width" constant="25" id="92U-1w-dUU"/>
+                                                    <constraint firstAttribute="height" constant="25" id="Rej-52-Kau"/>
+                                                </constraints>
+                                                <state key="normal" image="cropon.png"/>
+                                                <state key="disabled" image="cropoff.png"/>
+                                                <state key="selected" image="cropoff.png"/>
+                                                <connections>
+                                                    <action selector="borderDetectToggle:" destination="vXZ-lx-hvc" eventType="touchUpInside" id="scq-fY-42o"/>
+                                                </connections>
+                                            </button>
                                         </subviews>
                                         <constraints>
-                                            <constraint firstItem="fWX-ZW-MSa" firstAttribute="trailing" secondItem="uJ6-Em-RcD" secondAttribute="trailingMargin" constant="-20" id="F1u-aH-zjd"/>
-                                            <constraint firstItem="fWX-ZW-MSa" firstAttribute="centerY" secondItem="Nrc-IK-eNd" secondAttribute="centerY" id="Kmd-oe-tdL"/>
-                                            <constraint firstAttribute="height" constant="100" id="Q1h-5U-7oA"/>
+                                            <constraint firstItem="4jI-XK-PzI" firstAttribute="trailing" secondItem="uJ6-Em-RcD" secondAttribute="trailingMargin" id="22h-q8-PIr"/>
+                                            <constraint firstAttribute="height" constant="70" id="Q1h-5U-7oA"/>
                                             <constraint firstItem="Nrc-IK-eNd" firstAttribute="centerY" secondItem="uJ6-Em-RcD" secondAttribute="centerYWithinMargins" id="V79-ay-kFR"/>
+                                            <constraint firstItem="fWX-ZW-MSa" firstAttribute="leading" secondItem="uJ6-Em-RcD" secondAttribute="leadingMargin" id="e8K-5S-4Pk"/>
+                                            <constraint firstItem="fWX-ZW-MSa" firstAttribute="centerY" secondItem="Nrc-IK-eNd" secondAttribute="centerY" id="ePl-AF-Ajp"/>
+                                            <constraint firstItem="4jI-XK-PzI" firstAttribute="top" secondItem="fWX-ZW-MSa" secondAttribute="top" id="ful-nH-hw4"/>
                                             <constraint firstItem="Nrc-IK-eNd" firstAttribute="centerX" secondItem="uJ6-Em-RcD" secondAttribute="centerX" id="mJn-VF-FmB"/>
                                         </constraints>
                                     </view>
@@ -117,38 +132,47 @@
                     </connections>
                 </tapGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="445.72713643178412" y="234.40000000000001"/>
+            <point key="canvasLocation" x="445.60000000000002" y="234.33283358320841"/>
         </scene>
-        <!--View Controller-->
+        <!--View Controller Preview-->
         <scene sceneID="pvu-0S-wW9">
             <objects>
-                <viewController storyboardIdentifier="ViewController_Preview" id="z23-MD-Bcw" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="ViewControllerPreview" id="z23-MD-Bcw" customClass="ViewControllerPreview" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="GWu-fV-evl"/>
                         <viewControllerLayoutGuide type="bottom" id="3Bl-Mm-0ph"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="hPP-lz-rpZ">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="uvk-o6-W4W">
-                                <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                                 <gestureRecognizers/>
                             </imageView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="tjY-v3-Nuk">
-                                <rect key="frame" x="0.0" y="696" width="414" height="40"/>
+                                <rect key="frame" x="0.0" y="627" width="375" height="40"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="2If-P3-3OB" userLabel="Cancel" colorLabel="IBBuiltInLabel-Red">
                                         <rect key="frame" x="8" y="5" width="48" height="30"/>
                                         <state key="normal" title="Cancel"/>
+                                        <connections>
+                                            <action selector="cancelButton:" destination="z23-MD-Bcw" eventType="touchUpInside" id="wIc-Tk-LGC"/>
+                                        </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="XDz-Cv-nes">
-                                        <rect key="frame" x="189.33333333333334" y="5" width="36" height="30"/>
+                                        <rect key="frame" x="170" y="5" width="36" height="30"/>
                                         <state key="normal" title="Redo"/>
+                                        <connections>
+                                            <action selector="redoButton:" destination="z23-MD-Bcw" eventType="touchUpInside" id="HnF-zz-pqZ"/>
+                                        </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ShM-tV-ZuL">
-                                        <rect key="frame" x="362" y="5" width="44" height="30"/>
+                                        <rect key="frame" x="323" y="5" width="44" height="30"/>
                                         <state key="normal" title="Select"/>
+                                        <connections>
+                                            <action selector="selectButton:" destination="z23-MD-Bcw" eventType="touchUpInside" id="8zT-19-GAx"/>
+                                        </connections>
                                     </button>
                                 </subviews>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -177,6 +201,9 @@
                             <constraint firstItem="tjY-v3-Nuk" firstAttribute="trailing" secondItem="uvk-o6-W4W" secondAttribute="trailing" id="zge-fW-zJA"/>
                         </constraints>
                     </view>
+                    <connections>
+                        <outlet property="previewImage" destination="uvk-o6-W4W" id="Cjo-ag-Mq9"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="6Rt-v6-Fzh" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <tapGestureRecognizer id="YdG-BZ-phq"/>
@@ -187,6 +214,8 @@
     <resources>
         <image name="capture_button.png" width="66" height="66"/>
         <image name="closecamera.png" width="20" height="20"/>
+        <image name="cropoff.png" width="16" height="16"/>
+        <image name="cropon.png" width="16" height="16"/>
         <image name="flashoff.png" width="25" height="25"/>
         <image name="flashon.png" width="25" height="25"/>
         <image name="focusIndicator.png" width="75" height="75"/>

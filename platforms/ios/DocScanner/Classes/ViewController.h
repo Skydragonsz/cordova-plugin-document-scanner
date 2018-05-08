@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "ViewControllerPreview.h"
 @class DocScanner;
 @interface ViewController : UIViewController
 
