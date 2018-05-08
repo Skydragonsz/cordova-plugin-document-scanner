@@ -35,12 +35,6 @@
     <header-file src="platforms/ios/DocScanner/Classes/DocScanner.h" />
     <source-file src="platforms/ios/DocScanner/Classes/DocScanner.m" />
 
-    <header-file src="platforms/ios/DocScanner/Classes/MAConstants.h" />
-    <source-file src="platforms/ios/DocScanner/Classes/MAConstants.m" />
-
-    <header-file src="platforms/ios/DocScanner/Classes/MADrawRect.h" />
-    <source-file src="platforms/ios/DocScanner/Classes/MADrawRect.m" />
-
     <header-file src="platforms/ios/DocScanner/Classes/IPDFCameraViewController.h" />
     <source-file src="platforms/ios/DocScanner/Classes/IPDFCameraViewController.m" />
 
