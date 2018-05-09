@@ -365,7 +365,17 @@
              return;
          }
 
-         __block NSString *filePath = [NSTemporaryDirectory() stringByAppendingPathComponent:[NSString stringWithFormat:@"ipdf_img_%i.jpeg",(int)[NSDate date].timeIntervalSince1970]];
+         __block NSString *filePathOld = [NSTemporaryDirectory() stringByAppendingPathComponent:[NSString stringWithFormat:@"img_%i.jpeg",(int)[NSDate date].timeIntervalSince1970]];
+
+
+         //NSLibraryDirectory
+         //NSDocumentDirectory
+         NSArray *paths = NSSearchPathForDirectoriesInDomains( NSDocumentDirectory,    NSUserDomainMask ,YES );
+         NSString *documentsDir = [paths objectAtIndex:0];
+         NSString *filePath = [documentsDir stringByAppendingPathComponent:[NSString stringWithFormat:@"img_%d.jpeg", (int)[NSDate date].timeIntervalSince1970]];
+         if (self.isBorderDetectionEnabled)  {
+             filePath = [documentsDir stringByAppendingPathComponent:[NSString stringWithFormat:@"imgC_%d.jpeg", (int)[NSDate date].timeIntervalSince1970]];
+         }
 
          @autoreleasepool
          {

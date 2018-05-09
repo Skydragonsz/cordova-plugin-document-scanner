@@ -9,6 +9,20 @@ docScannerExport.takePicture = function(successCallback, errorCallback, options)
     options = options || {};
     // var getValue = argscheck.getValue;
 
+    /*
+    quality: 60,
+    sourceType: navigator.camera.PictureSourceType.CAMERA,
+    destinationType: navigator.camera.DestinationType.FILE_URI,
+    encodingType: Camera.EncodingType.JPEG,
+    correctOrientation: true,
+    saveToPhotoAlbum: saveToPhotoAlbum,
+    targetWidth: 512,
+    targetHeight: 512,
+    scope: this,
+    allowEdit: allowEdit
+
+    */
+
     // var quality = getValue(options.quality, 50);
     // var destinationType = getValue(options.destinationType, Camera.DestinationType.FILE_URI);
     // var sourceType = getValue(options.sourceType, Camera.PictureSourceType.CAMERA);
@@ -20,8 +34,7 @@ docScannerExport.takePicture = function(successCallback, errorCallback, options)
     // var popoverOptions = getValue(options.popoverOptions, null);
     // var cameraDirection = getValue(options.cameraDirection, Camera.Direction.BACK);
     //
-    // var args = [quality, destinationType, sourceType, targetWidth, targetHeight, encodingType,
-    //             mediaType, allowEdit, correctOrientation, saveToPhotoAlbum, popoverOptions, cameraDirection];
+    // var args = [quality, destinationType, sourceType, targetWidth, targetHeight, encodingType, mediaType, allowEdit, correctOrientation, saveToPhotoAlbum, popoverOptions, cameraDirection];
 
     // exec(successCallback, errorCallback, "DocScanner", "takePicture", args);
 

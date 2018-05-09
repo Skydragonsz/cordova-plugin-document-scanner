@@ -26,7 +26,7 @@
 @implementation ViewController
 
 #pragma mark -
-#pragma mark View Lifecycle
+#pragma mark View Lifecycle Test
 
 - (void)viewDidLoad
 {
@@ -144,12 +144,15 @@
         // Get a reference to the captured image
         UIImage* image = [UIImage imageWithContentsOfFile:imageFilePath];
 
-
         // Get the image data (blocking; around 1 second)
         NSData* imageData = UIImageJPEGRepresentation(image, 0.8); //NGRepresentation(image);
 
         // Write the data to the file
         [imageData writeToFile:imageFilePath atomically:YES];
+
+
+
+        NSLog(imageFilePath);
 
 
         // Tell the plugin class that we're finished processing the image
@@ -158,7 +161,8 @@
         // ViewControllerPreview *viewControllerPre = [[ViewControllerPreview alloc] initWithNib:@"ViewControllerPreview" bundle:nil];
         // viewControllerPre.imageData = imageData;
         // [self pushViewController:viewControllerPre animated:YES];
-        [self.plugin capturedImageWithPath:imageData];
+        [self.plugin captureImageWithFilePath:imageFilePath];
+        //[self.plugin capturedImageWithPath:imageData];
     }];
 }
 
