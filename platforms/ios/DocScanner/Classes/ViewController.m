@@ -144,15 +144,21 @@
         // Get a reference to the captured image
         UIImage* image = [UIImage imageWithContentsOfFile:imageFilePath];
 
+        double targetWidth = [self.plugin.options.targetWidth doubleValue];
+        double targetHeight = [self.plugin.options.targetHeight doubleValue];
+
+        //To resize the image; use this.
+        image = [self imageWithImage:image toTargetWidth:targetWidth toTargetHeight:targetHeight];
+
         // Get the image data (blocking; around 1 second)
-        NSData* imageData = UIImageJPEGRepresentation(image, 0.8); //NGRepresentation(image);
+        //Second parameter is the quality 0.8 = 80%
+        float quality = [self.plugin.options.targetHeight floatValue] / 100;
+
+        NSData* imageData = UIImageJPEGRepresentation(image, quality); //NGRepresentation(image);
 
         // Write the data to the file
         [imageData writeToFile:imageFilePath atomically:YES];
 
-
-
-        NSLog(imageFilePath);
 
 
         // Tell the plugin class that we're finished processing the image
@@ -186,5 +192,29 @@
 //         [dismissTap.view removeFromSuperview];
 //     }];
 // }
+
+-(UIImage*)imageWithImage: (UIImage*) sourceImage toTargetWidth: (float) targetWidth toTargetHeight:(float)targetHeight
+{
+    //image = [self.plugin imageWithImage:image resizeTo:CGSizeMake(targetWidth,targetWidth *image.size.height/image.size.width)];
+
+    float oldWidth = sourceImage.size.width;
+    float oldHeight = sourceImage.size.height;
+
+    float aspect = (width > height) ? (targetWidth / oldWidth) : (targetHeight/oldHeight);
+
+
+
+    float newWidth = oldWidth * aspect;
+    float newHeight = oldHeight * aspect;
+
+
+
+
+    UIGraphicsBeginImageContext(CGSizeMake(newWidth, newHeight));
+    [sourceImage drawInRect:CGRectMake(0, 0, newWidth, newHeight)];
+    UIImage *newImage = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    return newImage;
+}
 
 @end

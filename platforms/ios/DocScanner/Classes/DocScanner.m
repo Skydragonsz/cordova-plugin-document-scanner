@@ -37,11 +37,26 @@ static NSString* toBase64(NSData* theData) {
   return [[NSString alloc] initWithData:data encoding:NSASCIIStringEncoding];
 }
 
-@implementation DocScanner
+@implementation ImageOptions
 
-// - (void)execute:(CDVInvokedUrlCommand *)command {
-//     [self takePicture:command];
-// }
++ (instancetype) setImageOptions:(CDVInvokedUrlCommand*)command
+{
+    ImageOptions* pictureOptions = [[ImageOptions alloc] init];
+
+    pictureOptions.quality = [command argumentAtIndex:0 withDefault:@(80)];
+
+    pictureOptions.targetWidth = [command argumentAtIndex:1 withDefault:@(0)];
+    pictureOptions.targetHeight = [command argumentAtIndex:2 withDefault:@(0)];
+
+
+    pictureOptions.correctOrientation = [[command argumentAtIndex:3 withDefault:@(NO)] boolValue];
+
+    return pictureOptions;
+}
+
+@end
+
+@implementation DocScanner
 
 // Cordova command method
 -(void) takePicture:(CDVInvokedUrlCommand *)command {
@@ -52,6 +67,8 @@ static NSString* toBase64(NSData* theData) {
     __weak DocScanner* weakSelf = self;
     // Save the CDVInvokedUrlCommand as a property.  We will need it later.
     weakSelf.latestCommand = command;
+
+    weakSelf.options = [ImageOptions setImageOptions:command];
 
     // Make the overlay view controller.
 //    self.overlay = [[ViewController alloc] initWithNibName:@"Main" bundle:nil];
@@ -68,7 +85,7 @@ static NSString* toBase64(NSData* theData) {
     [weakSelf.overlay dismissViewControllerAnimated:YES completion:nil];
 }
 -(void) captureImageWithFilePath:(NSString*)imagePath{
-    
+
      [self.commandDelegate sendPluginResult:[CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:imagePath] callbackId:self.latestCommand.callbackId];
 
     // Unset the self.hasPendingOperation property

@@ -2,6 +2,18 @@
 
 #import "ViewController.h"
 
+@interface ImageOptions : NSObject
+
+@property (strong) NSNumber* quality;
+@property (strong) NSNumber* targetWidth;
+@property (strong) NSNumber* targetHeight;
+@property (assign) BOOL correctOrientation;
+
+
++ (instancetype) setImageOptions:(CDVInvokedUrlCommand*)command;
+
+@end
+
 @interface DocScanner : CDVPlugin
 
 // Cordova command method
@@ -13,6 +25,7 @@
 -(void) dismissCamera;
 @property (strong, nonatomic) ViewController* overlay;
 @property (strong, nonatomic) CDVInvokedUrlCommand* latestCommand;
+@property (strong, nonatomic) ImageOptions* options;
 @property (readwrite, assign) BOOL hasPendingOperation;
 
 @end
