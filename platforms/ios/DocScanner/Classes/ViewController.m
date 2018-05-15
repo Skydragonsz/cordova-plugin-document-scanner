@@ -125,21 +125,6 @@
 
     [self.cameraViewController captureImageWithCompletionHander:^(NSString *imageFilePath)
     {
-//        UIImageView *captureImageView = [[UIImageView alloc] initWithImage:[UIImage imageWithContentsOfFile:imageFilePath]];
-//        captureImageView.backgroundColor = [UIColor colorWithWhite:0.0 alpha:0.7];
-//        captureImageView.frame = CGRectOffset(self.view.bounds, 0, self.view.bounds.size.height);
-//        captureImageView.alpha = 1.0;
-//        captureImageView.contentMode = UIViewContentModeScaleAspectFit;
-//        captureImageView.userInteractionEnabled = YES;
-//        [self.view addSubview:captureImageView];
-
-//        UITapGestureRecognizer *dismissTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(dismissPreview:)];
-//        [captureImageView addGestureRecognizer:dismissTap];
-//
-//        [UIView animateWithDuration:0.7 delay:0.0 usingSpringWithDamping:0.8 initialSpringVelocity:0.7 options:UIViewAnimationOptionAllowUserInteraction animations:^
-//        {
-//            captureImageView.frame = self.view.bounds;
-//        } completion:nil];
 
         // Get a reference to the captured image
         UIImage* image = [UIImage imageWithContentsOfFile:imageFilePath];
@@ -153,22 +138,24 @@
         // Get the image data (blocking; around 1 second)
         //Second parameter is the quality 0.8 = 80%
         float quality = [self.plugin.options.targetHeight floatValue] / 100;
-
         NSData* imageData = UIImageJPEGRepresentation(image, quality); //NGRepresentation(image);
 
         // Write the data to the file
         [imageData writeToFile:imageFilePath atomically:YES];
 
 
+        // Save to photo album if needed
+        if(self.plugin.options.saveToPhotoAlbum){
+            UIImage* savedImage = [UIImage imageWithContentsOfFile:imageFilePath];
+            UIImageWriteToSavedPhotosAlbum(savedImage, nil, nil, nil);
+        }
 
         // Tell the plugin class that we're finished processing the image
-        // ViewController *vc = [[ViewController alloc]initWithNibName:@"ViewControllerPreview" bundle:nil];
-        // [self presentViewController:vc animated:YES completion:nil];
-        // ViewControllerPreview *viewControllerPre = [[ViewControllerPreview alloc] initWithNib:@"ViewControllerPreview" bundle:nil];
-        // viewControllerPre.imageData = imageData;
-        // [self pushViewController:viewControllerPre animated:YES];
-        [self.plugin captureImageWithFilePath:imageFilePath];
-        //[self.plugin capturedImageWithPath:imageData];
+        if(self.plugin.options.toBase64) [self.plugin capturedImageWithPath:imageData];
+        else {
+            UIImage* savedImage = [UIImage imageWithContentsOfFile:imageFilePath];
+            [self.plugin captureImageWithFilePath:imageFilePath];
+        }
     }];
 }
 
@@ -200,15 +187,18 @@
     float oldWidth = sourceImage.size.width;
     float oldHeight = sourceImage.size.height;
 
-    float aspect = (width > height) ? (targetWidth / oldWidth) : (targetHeight/oldHeight);
+
+    float newWidth = 0;
+    float newHeight = 0;
 
 
+    if((targetWidth != 0) && (targetWidth <= oldWidth)){
+        newWidth = targetWidth * oldHeight/oldWidth;
+    }
 
-    float newWidth = oldWidth * aspect;
-    float newHeight = oldHeight * aspect;
-
-
-
+    if((targetHeight != 0) && (targetHeight <= oldHeight)){
+        newHeight = targetHeight * oldWidth/oldHeight;
+    }
 
     UIGraphicsBeginImageContext(CGSizeMake(newWidth, newHeight));
     [sourceImage drawInRect:CGRectMake(0, 0, newWidth, newHeight)];

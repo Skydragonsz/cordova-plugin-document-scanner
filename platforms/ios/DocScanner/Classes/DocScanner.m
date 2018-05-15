@@ -48,8 +48,9 @@ static NSString* toBase64(NSData* theData) {
     pictureOptions.targetWidth = [command argumentAtIndex:1 withDefault:@(0)];
     pictureOptions.targetHeight = [command argumentAtIndex:2 withDefault:@(0)];
 
+    pictureOptions.toBase64 = [[command argumentAtIndex:3 withDefault:@(NO)] boolValue];
 
-    pictureOptions.correctOrientation = [[command argumentAtIndex:3 withDefault:@(NO)] boolValue];
+    pictureOptions.saveToPhotoAlbum = [[command argumentAtIndex:4 withDefault:@(NO)] boolValue];
 
     return pictureOptions;
 }
@@ -96,7 +97,7 @@ static NSString* toBase64(NSData* theData) {
 }
 
 // // Method called by the overlay when the image is ready to be sent back to the web view
- -(void) capturedImageWithPath:(NSData*)imageData {
+-(void) capturedImageWithPath:(NSData*)imageData {
      [self.commandDelegate sendPluginResult:[CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:toBase64(imageData)] callbackId:self.latestCommand.callbackId];
 
      // Unset the self.hasPendingOperation property

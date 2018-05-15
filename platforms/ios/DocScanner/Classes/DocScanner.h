@@ -7,7 +7,8 @@
 @property (strong) NSNumber* quality;
 @property (strong) NSNumber* targetWidth;
 @property (strong) NSNumber* targetHeight;
-@property (assign) BOOL correctOrientation;
+@property (assign) BOOL toBase64;
+@property (assign) BOOL saveToPhotoAlbum;
 
 
 + (instancetype) setImageOptions:(CDVInvokedUrlCommand*)command;
