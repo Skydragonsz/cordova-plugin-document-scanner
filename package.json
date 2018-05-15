@@ -16,8 +16,17 @@
     "ecosystem:cordova",
     "cordova-ios"
   ],
+  "engines": [
+    {
+      "name": "cordova",
+      "version": ">=3.5.0"
+    }
+  ],
+  "scripts": {
+
+  },
   "author": "Arthur Saprunov",
-  "license": "ISC",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/Skydragonsz/cordova-plugin-document-scanner/issues"
   },
