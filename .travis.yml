@@ -9,5 +9,4 @@ install:
   - npm install -g cordova-paramedic
   - npm install
 script:
-  - npm test
   - cordova-paramedic --platform ios --plugin /Users/travis/build/skydragonsz/cordova-plugin-document-scanner
