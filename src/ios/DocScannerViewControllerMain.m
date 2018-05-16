@@ -6,8 +6,8 @@
 //  Copyright (c) 2015 Maximilian Mackh. All rights reserved.
 //
 #import "DocScanner.h"
-#import "ViewController.h"
-#import "ViewControllerPreview.h"
+#import "DocScannerViewControllerMain.h"
+#import "DocScannerViewControllerPreview.h"
 #import "IPDFCameraViewController.h"
 #import <AVFoundation/AVFoundation.h>
 #import <MobileCoreServices/UTCoreTypes.h>
@@ -16,8 +16,13 @@
 
 @property (weak, nonatomic) IBOutlet IPDFCameraViewController *cameraViewController;
 @property (weak, nonatomic) IBOutlet UIImageView *focusIndicator;
-- (IBAction)focusGesture:(id)sender;
+@property (weak, nonatomic) IBOutlet UIButton *dismissButton;
+@property (weak, nonatomic) IBOutlet UIButton *cropButton;
+@property (weak, nonatomic) IBOutlet UIButton *flashButton;
+@property (weak, nonatomic) IBOutlet UIButton *captureButton;
 
+
+- (IBAction)focusGesture:(id)sender;
 - (IBAction)captureButton:(id)sender;
 - (IBAction)dismissButton:(id)sender;
 
@@ -26,7 +31,7 @@
 @implementation ViewController
 
 #pragma mark -
-#pragma mark View Lifecycle Test
+#pragma mark View Lifecycle
 
 - (void)viewDidLoad
 {
@@ -36,11 +41,13 @@
     [self.cameraViewController setEnableBorderDetection:YES];
 
     [self.cameraViewController setCameraViewType:IPDFCameraViewTypeNormal];
+
 }
 
 - (void)viewDidAppear:(BOOL)animated
 {
     [self.cameraViewController start];
+
 }
 
 - (UIStatusBarStyle)preferredStatusBarStyle
@@ -129,11 +136,18 @@
         // Get a reference to the captured image
         UIImage* image = [UIImage imageWithContentsOfFile:imageFilePath];
 
+        //To resize the image; use this.
         double targetWidth = [self.plugin.options.targetWidth doubleValue];
         double targetHeight = [self.plugin.options.targetHeight doubleValue];
+        if(targetWidth == 0 && targetHeight == 0){
+            //NOTHING
+            //XXX I know this can be done another way
+        }else image = [self imageWithImage:image toTargetWidth:targetWidth toTargetHeight:targetHeight];
 
-        //To resize the image; use this.
-        image = [self imageWithImage:image toTargetWidth:targetWidth toTargetHeight:targetHeight];
+        //change orientation of the image to match device orientation
+        //normal = 1 | upsidedown = 2 | left = 3 | right = 4
+        UIDeviceOrientation deviceOrientation = [[UIDevice currentDevice] orientation];
+        if(deviceOrientation != 1) image = [self rotate:image withOrientation:deviceOrientation]; //Just to reduce the latency
 
         // Get the image data (blocking; around 1 second)
         //Second parameter is the quality 0.8 = 80%
@@ -188,8 +202,8 @@
     float oldHeight = sourceImage.size.height;
 
 
-    float newWidth = 0;
-    float newHeight = 0;
+    float newWidth = oldWidth;
+    float newHeight = oldHeight;
 
 
     if((targetWidth != 0) && (targetWidth <= oldWidth)){
@@ -206,5 +220,44 @@
     UIGraphicsEndImageContext();
     return newImage;
 }
+
+
+-(UIImage*) rotate:(UIImage*)src withOrientation:(UIDeviceOrientation)orientation
+{
+
+    bool perpendicular = false;
+
+    UIGraphicsBeginImageContext(CGSizeMake(src.size.width, src.size.height));
+
+    CGContextRef context = UIGraphicsGetCurrentContext();
+
+    CGContextTranslateCTM(context, src.size.width / 2, src.size.height / 2);
+    if (orientation == 4) {
+        CGContextRotateCTM (context, M_PI_2);
+        perpendicular = true;
+    } else if (orientation == 3) {
+        CGContextRotateCTM (context, -M_PI_2);
+        perpendicular = true;
+    } else if (orientation == 1) {
+        CGContextRotateCTM (context, 0.0);
+    } else if (orientation == 2) {
+        CGContextRotateCTM (context, M_PI);
+    }
+
+    CGContextScaleCTM(context, 1.0, -1.0);
+    float width = perpendicular ? src.size.height : src.size.width;
+    float height = perpendicular ? src.size.width : src.size.height;
+    CGContextDrawImage(context, CGRectMake(-width / 2, -height / 2, width, height), [src CGImage]);
+
+    // Move the origin back since the rotation might've change it (if its 90 degrees)
+    if (perpendicular) {
+        CGContextTranslateCTM(context, -src.size.height / 2, -src.size.width / 2);
+    }
+
+    UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    return image;
+}
+
 
 @end

@@ -122,6 +122,10 @@
                     </view>
                     <connections>
                         <outlet property="cameraViewController" destination="GCS-Ur-8wm" id="aK5-eV-i4e"/>
+                        <outlet property="captureButton" destination="Nrc-IK-eNd" id="9nr-Su-5La"/>
+                        <outlet property="cropButton" destination="4jI-XK-PzI" id="8ia-5G-ua5"/>
+                        <outlet property="dismissButton" destination="kaV-jl-UHo" id="0BO-jz-ApN"/>
+                        <outlet property="flashButton" destination="fWX-ZW-MSa" id="tff-z4-fji"/>
                         <outlet property="focusIndicator" destination="ngc-U5-0Sq" id="WwM-0U-gCy"/>
                     </connections>
                 </viewController>

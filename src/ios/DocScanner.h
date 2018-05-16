@@ -1,6 +1,6 @@
 #import <Cordova/CDV.h>
 
-#import "ViewController.h"
+#import "DocScannerViewControllerMain.h"
 
 @interface ImageOptions : NSObject
 

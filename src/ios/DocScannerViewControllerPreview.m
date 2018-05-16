@@ -1,5 +1,6 @@
+// Not used yet
 #import "DocScanner.h"
-#import "ViewControllerPreview.h"
+#import "DocScannerViewControllerPreview.h"
 #import "IPDFCameraViewController.h"
 #import <AVFoundation/AVFoundation.h>
 #import <MobileCoreServices/UTCoreTypes.h>
@@ -22,14 +23,13 @@
 }
 
 - (IBAction)selectButton:(id)sender{
-    
+
     //[self.plugin capturedImageWithPath:imageData];
 }
 
 - (IBAction)redoButton:(id)sender{
-    
+
 }
 
 
 @end
-

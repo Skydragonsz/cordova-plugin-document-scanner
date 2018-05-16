@@ -26,28 +26,28 @@
 
     <!-- core CustomCamera header and source files -->
 
-    <header-file src="platforms/ios/DocScanner/Classes/ViewController.h" />
-    <source-file src="platforms/ios/DocScanner/Classes/ViewController.m" />
+    <header-file src="src/ios/DocScanner.h" />
+    <source-file src="src/ios/DocScanner.m" />
 
-    <header-file src="platforms/ios/DocScanner/Classes/ViewControllerPreview.h" />
-    <source-file src="platforms/ios/DocScanner/Classes/ViewControllerPreview.m" />
+    <header-file src="src/ios/DocScannerViewControllerMain.h" />
+    <source-file src="src/ios/DocScannerViewControllerMain.m" />
 
-    <header-file src="platforms/ios/DocScanner/Classes/DocScanner.h" />
-    <source-file src="platforms/ios/DocScanner/Classes/DocScanner.m" />
+    <header-file src="src/ios/DocScannerViewControllerPreview.h" />
+    <source-file src="src/ios/DocScannerViewControllerPreview.m" />
 
-    <header-file src="platforms/ios/DocScanner/Classes/IPDFCameraViewController.h" />
-    <source-file src="platforms/ios/DocScanner/Classes/IPDFCameraViewController.m" />
+    <header-file src="src/ios/IPDFCameraViewController.h" />
+    <source-file src="src/ios/IPDFCameraViewController.m" />
 
-    <source-file src="platforms/ios/DocScanner/Images.xcassets/capture_button.imageset/capture_button@2x.png" />
-    <source-file src="platforms/ios/DocScanner/Images.xcassets/focusIndicator.imageset/focusIndicator.png" />
-    <source-file src="platforms/ios/DocScanner/Images.xcassets/focusIndicator.imageset/focusIndicator@2x.png" />
-    <source-file src="platforms/ios/DocScanner/Images.xcassets/closecamera.imageset/closecamera@2x.png" />
-    <source-file src="platforms/ios/DocScanner/Images.xcassets/flashoff.imageset/flashoff@2x.png" />
-    <source-file src="platforms/ios/DocScanner/Images.xcassets/flashon.imageset/flashon@2x.png" />
-    <source-file src="platforms/ios/DocScanner/Images.xcassets/cropon.imageset/cropon@2x.png" />
-    <source-file src="platforms/ios/DocScanner/Images.xcassets/cropoff.imageset/cropoff@2x.png" />
+    <source-file src="src/ios/Images.xcassets/capture_button.imageset/capture_button@2x.png" />
+    <source-file src="src/ios/Images.xcassets/focusIndicator.imageset/focusIndicator.png" />
+    <source-file src="src/ios/Images.xcassets/focusIndicator.imageset/focusIndicator@2x.png" />
+    <source-file src="src/ios/Images.xcassets/closecamera.imageset/closecamera@2x.png" />
+    <source-file src="src/ios/Images.xcassets/flashoff.imageset/flashoff@2x.png" />
+    <source-file src="src/ios/Images.xcassets/flashon.imageset/flashon@2x.png" />
+    <source-file src="src/ios/Images.xcassets/cropon.imageset/cropon@2x.png" />
+    <source-file src="src/ios/Images.xcassets/cropoff.imageset/cropoff@2x.png" />
 
-    <resource-file src="platforms/ios/DocScanner/Classes/Main.storyboard" />
+    <resource-file src="src/ios/Main.storyboard" />
 
     <framework src="Foundation.framework" />
     <framework src="SystemConfiguration.framework" />
