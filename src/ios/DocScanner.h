@@ -19,6 +19,7 @@
 
 // Cordova command method
 -(void) takePicture:(CDVInvokedUrlCommand*)command;
+-(void) getDevice:(CDVInvokedUrlCommand*)command;
 
 // Create and override some properties and methods (these will be explained later)
 -(void) capturedImageWithPath:(NSData*)imageData;

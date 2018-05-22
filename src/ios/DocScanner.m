@@ -72,13 +72,23 @@ static NSString* toBase64(NSData* theData) {
     weakSelf.options = [ImageOptions setImageOptions:command];
 
     // Make the overlay view controller.
-//    self.overlay = [[ViewController alloc] initWithNibName:@"Main" bundle:nil];
+    // self.overlay = [[ViewController alloc] initWithNibName:@"Main" bundle:nil];
     weakSelf.overlay = [[UIStoryboard storyboardWithName:@"Main" bundle:nil] instantiateViewControllerWithIdentifier:@"ViewController_Camera"];
-//    [self presentViewController:self.overlay animated:YES completion:nil];
+    // [self presentViewController:self.overlay animated:YES completion:nil];
     weakSelf.overlay.plugin = self;
 
     // Display the view.  This will "slide up" a modal view from the bottom of the screen.
     [weakSelf.viewController presentViewController:self.overlay animated:YES completion:nil];
+}
+
+-(void) getDevice:(CDVInvokedUrlCommand*)command {
+    self.hasPendingOperation = YES;
+
+    CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:@"iOS"];
+
+    [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+
+    self.hasPendingOperation = NO;
 }
 
 -(void)dismissCamera{

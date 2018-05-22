@@ -45,8 +45,13 @@ docScannerExport.takePicture = function(successCallback, errorCallback, options)
 
 };
 
-docScannerExport.isActive = function(){
-    //TODO write code here
-    //XXX is this needed?
+docScannerExport.getDevice = function(callback){
+    exec(callback, function(e){
+        console.error(e);
+    }, "DocScanner", "getDevice",[]);
+
+
 }
+
+
 module.exports = docScannerExport;
