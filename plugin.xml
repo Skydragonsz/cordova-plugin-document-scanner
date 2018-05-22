@@ -47,7 +47,7 @@
     <source-file src="src/ios/Images.xcassets/cropon.imageset/cropon@2x.png" />
     <source-file src="src/ios/Images.xcassets/cropoff.imageset/cropoff@2x.png" />
 
-    <resource-file src="src/ios/Main.storyboard" />
+    <resource-file src="src/ios/DocScannerMain.storyboard" />
 
     <framework src="Foundation.framework" />
     <framework src="SystemConfiguration.framework" />

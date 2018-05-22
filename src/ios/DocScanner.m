@@ -73,7 +73,7 @@ static NSString* toBase64(NSData* theData) {
 
     // Make the overlay view controller.
     // self.overlay = [[ViewController alloc] initWithNibName:@"Main" bundle:nil];
-    weakSelf.overlay = [[UIStoryboard storyboardWithName:@"Main" bundle:nil] instantiateViewControllerWithIdentifier:@"ViewController_Camera"];
+    weakSelf.overlay = [[UIStoryboard storyboardWithName:@"DocScannerMain" bundle:nil] instantiateViewControllerWithIdentifier:@"ViewController_Camera"];
     // [self presentViewController:self.overlay animated:YES completion:nil];
     weakSelf.overlay.plugin = self;
 
