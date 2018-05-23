@@ -7,7 +7,9 @@
 //
 
 #import "IPDFCameraViewController.h"
+#import "OrientationHelper.h"
 
+#import <Foundation/Foundation.h>
 #import <AVFoundation/AVFoundation.h>
 #import <CoreMedia/CoreMedia.h>
 #import <CoreVideo/CoreVideo.h>
@@ -38,7 +40,10 @@
 
 @property (nonatomic, assign) BOOL forceStop;
 @property (nonatomic, assign) CGSize intrinsicContentSize;
-@property (atomic) CGRect cachedBounds; // self.bounds can only be accessed on main thread
+
+@property (nonatomic, weak) AVCaptureConnection *cameraConnection;
+
+@property (nonatomic, strong) OrientationHelper *orientationHelper;
 
 @end
 
@@ -57,48 +62,32 @@
 
     BOOL _isCapturing;
     dispatch_queue_t _captureQueue;
+
+    NSNotificationCenter *notificationCenter;
+    UIDevice *device;
 }
 
 - (void)awakeFromNib
 {
     [super awakeFromNib];
 
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_backgroundMode) name:UIApplicationWillResignActiveNotification object:nil];
+    notificationCenter = [NSNotificationCenter defaultCenter];
+    device = [UIDevice currentDevice];
+    _orientationHelper = [[OrientationHelper alloc] initWithBundle:[NSBundle mainBundle]];
 
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_foregroundMode) name:UIApplicationDidBecomeActiveNotification object:nil];
+    [notificationCenter addObserver:self selector:@selector(_backgroundMode) name:UIApplicationWillResignActiveNotification object:nil];
+
+    [notificationCenter addObserver:self selector:@selector(_foregroundMode) name:UIApplicationDidBecomeActiveNotification object:nil];
+
+    [self beginObserservingOrientationNotifications];
 
     _captureQueue = dispatch_queue_create("com.instapdf.AVCameraCaptureQueue", DISPATCH_QUEUE_SERIAL);
 }
 
-- (void)_backgroundMode
-{
-    self.forceStop = YES;
-}
-
-- (void)_foregroundMode
-{
-    self.forceStop = NO;
-}
-
 - (void)dealloc
 {
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
-}
-
-- (void)createGLKView
-{
-    if (self.context) return;
-
-    self.context = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES2];
-    GLKView *view = [[GLKView alloc] initWithFrame:self.bounds];
-    view.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-    view.translatesAutoresizingMaskIntoConstraints = YES;
-    view.context = self.context;
-    view.contentScaleFactor = 1.0f;
-    view.drawableDepthFormat = GLKViewDrawableDepthFormat24;
-    [self insertSubview:view atIndex:0];
-    _glkView = view;
-    _coreImageContext = [CIContext contextWithEAGLContext:self.context options:@{ kCIContextWorkingColorSpace : [NSNull null],kCIContextUseSoftwareRenderer : @(NO)}];
+    [notificationCenter removeObserver:self];
+    [device endGeneratingDeviceOrientationNotifications];
 }
 
 - (void)setupCameraView
@@ -130,8 +119,8 @@
     self.stillImageOutput = [[AVCaptureStillImageOutput alloc] init];
     [session addOutput:self.stillImageOutput];
 
-    AVCaptureConnection *connection = [dataOutput.connections firstObject];
-    [connection setVideoOrientation:AVCaptureVideoOrientationPortrait];
+    self.cameraConnection = [dataOutput.connections firstObject];
+    [self orientationNotificationDidChange: nil];
 
     if (device.isFlashAvailable)
     {
@@ -148,6 +137,66 @@
     }
 
     [session commitConfiguration];
+}
+
+- (void)start
+{
+    _isStopped = NO;
+
+    [self.captureSession startRunning];
+
+    _borderDetectTimeKeeper = [NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector(enableBorderDetectFrame) userInfo:nil repeats:YES];
+
+    [self hideGLKView:NO completion:nil];
+}
+
+- (void)stop
+{
+    _isStopped = YES;
+
+    [self.captureSession stopRunning];
+
+    [_borderDetectTimeKeeper invalidate];
+
+    [self hideGLKView:YES completion:nil];
+}
+
+#pragma mark Private methods
+
+#pragma mark UIApplicationWillResignActiveNotification
+
+/**
+ Called when the app goes in the background.
+ */
+- (void)_backgroundMode
+{
+    self.forceStop = YES;
+}
+
+#pragma mark UIApplicationDidBecomeActiveNotification
+
+/**
+ Called when the app goes in the foreground.
+ */
+- (void)_foregroundMode
+{
+    self.forceStop = NO;
+}
+
+- (void)createGLKView
+{
+    if (self.context) return;
+
+    self.context = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES2];
+    GLKView *view = [[GLKView alloc] initWithFrame:self.bounds];
+    view.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+    view.translatesAutoresizingMaskIntoConstraints = YES;
+    view.context = self.context;
+    view.contentScaleFactor = 1.0f;
+    view.drawableDepthFormat = GLKViewDrawableDepthFormat24;
+    [self insertSubview:view atIndex:0];
+    _glkView = view;
+    _coreImageContext = [CIContext contextWithEAGLContext:self.context options:@{ kCIContextWorkingColorSpace : [NSNull null],kCIContextUseSoftwareRenderer : @(NO)}];
 }
 
 - (void)setCameraViewType:(IPDFCameraViewType)cameraViewType
@@ -168,6 +217,7 @@
 
 -(void)captureOutput:(AVCaptureOutput *)captureOutput didOutputSampleBuffer:(CMSampleBufferRef)sampleBuffer fromConnection:(AVCaptureConnection *)connection
 {
+    IPDFCameraViewController __weak *weakSelf = self;
     if (self.forceStop) return;
     if (_isStopped || _isCapturing || !CMSampleBufferIsValid(sampleBuffer)) return;
 
@@ -204,25 +254,24 @@
         }
     }
 
-    if (self.context && _coreImageContext)
-    {
-        if(_context != [EAGLContext currentContext])
+
+    dispatch_async(dispatch_get_main_queue(), ^{
+        if (weakSelf.context && _coreImageContext)
         {
-            [EAGLContext setCurrentContext:_context];
-        }
-        [_glkView bindDrawable];
-        [_coreImageContext drawImage:image inRect:self.cachedBounds fromRect:[self cropRectForPreviewImage:image]];
-        [_glkView display];
+            if(_context != [EAGLContext currentContext])
+            {
+                [EAGLContext setCurrentContext:_context];
+            }
+            [_glkView bindDrawable];
+            [_coreImageContext drawImage:image inRect:weakSelf.bounds fromRect:[weakSelf cropRectForPreviewImage:image]];
+            [_glkView display];
 
-        if(_intrinsicContentSize.width != image.extent.size.width) {
-            self.intrinsicContentSize = image.extent.size;
-            dispatch_async(dispatch_get_main_queue(), ^{
-                [self invalidateIntrinsicContentSize];
-            });
+            if(_intrinsicContentSize.width != image.extent.size.width) {
+                weakSelf.intrinsicContentSize = image.extent.size;
+                [weakSelf invalidateIntrinsicContentSize];
+            }
         }
-
-        image = nil;
-    }
+    });
 }
 
 - (CGSize)intrinsicContentSize
@@ -239,10 +288,10 @@
     CGFloat cropHeight = image.extent.size.height;
     if (image.extent.size.width>image.extent.size.height) {
         cropWidth = image.extent.size.width;
-        cropHeight = cropWidth*self.cachedBounds.size.height/self.cachedBounds.size.width;
+        cropHeight = cropWidth*self.bounds.size.height/self.bounds.size.width;
     }else if (image.extent.size.width<image.extent.size.height) {
         cropHeight = image.extent.size.height;
-        cropWidth = cropHeight*self.cachedBounds.size.width/self.cachedBounds.size.height;
+        cropWidth = cropHeight*self.bounds.size.width/self.bounds.size.height;
     }
     return CGRectInset(image.extent, (image.extent.size.width-cropWidth)/2, (image.extent.size.height-cropHeight)/2);
 }
@@ -259,28 +308,6 @@
     overlay = [overlay imageByApplyingFilter:@"CIPerspectiveTransformWithExtent" withInputParameters:@{@"inputExtent":[CIVector vectorWithCGRect:image.extent],@"inputTopLeft":[CIVector vectorWithCGPoint:topLeft],@"inputTopRight":[CIVector vectorWithCGPoint:topRight],@"inputBottomLeft":[CIVector vectorWithCGPoint:bottomLeft],@"inputBottomRight":[CIVector vectorWithCGPoint:bottomRight]}];
 
     return [overlay imageByCompositingOverImage:image];
-}
-
-- (void)start
-{
-    _isStopped = NO;
-
-    [self.captureSession startRunning];
-
-    _borderDetectTimeKeeper = [NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector(enableBorderDetectFrame) userInfo:nil repeats:YES];
-
-    [self hideGLKView:NO completion:nil];
-}
-
-- (void)stop
-{
-    _isStopped = YES;
-
-    [self.captureSession stopRunning];
-
-    [_borderDetectTimeKeeper invalidate];
-
-    [self hideGLKView:YES completion:nil];
 }
 
 - (void)setEnableTorch:(BOOL)enableTorch
@@ -355,7 +382,7 @@
         if (videoConnection) break;
     }
 
-//    __weak typeof(self) weakSelf = self;
+    // __weak typeof(self) weakSelf = self;
 
     [self.stillImageOutput captureStillImageAsynchronouslyFromConnection:videoConnection completionHandler: ^(CMSampleBufferRef imageSampleBuffer, NSError *error)
      {
@@ -606,10 +633,46 @@ BOOL rectangleDetectionConfidenceHighEnough(float confidence)
     return (confidence > 1.0);
 }
 
--(void)layoutSubviews
+-(void)beginObserservingOrientationNotifications
 {
-    [super layoutSubviews];
-    self.cachedBounds = self.bounds;
+    [notificationCenter addObserver: self
+                           selector: @selector(orientationNotificationDidChange:)
+                               name: UIDeviceOrientationDidChangeNotification
+                             object: nil];
+    [device beginGeneratingDeviceOrientationNotifications];
 }
 
+-(void)orientationNotificationDidChange:(NSNotification *)notif
+{
+
+    // Filter out all the orientations which aren't supported by the application.
+    if (![self isOrientationSupported:device.orientation]) {
+        return;
+    }
+
+    switch (device.orientation) {
+        case UIDeviceOrientationLandscapeLeft:
+            _cameraConnection.videoOrientation = AVCaptureVideoOrientationLandscapeRight;
+            break;
+        case UIDeviceOrientationLandscapeRight:
+            _cameraConnection.videoOrientation = AVCaptureVideoOrientationLandscapeLeft;
+            break;
+        case UIDeviceOrientationPortrait:
+            _cameraConnection.videoOrientation = AVCaptureVideoOrientationPortrait;
+            break;
+        case UIDeviceOrientationPortraitUpsideDown:
+            _cameraConnection.videoOrientation = AVCaptureVideoOrientationPortraitUpsideDown;
+        break;
+        default:
+            _cameraConnection.videoOrientation = AVCaptureVideoOrientationLandscapeLeft;
+            break;
+    }
+}
+
+/**
+ Whether the given UIDeviceOrientation is supported by the application.
+*/
+-(BOOL)isOrientationSupported:(UIDeviceOrientation)orientation {
+    return [self.orientationHelper isCurrentOrientationSupported:orientation];
+}
 @end
