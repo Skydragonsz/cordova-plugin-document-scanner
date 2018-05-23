@@ -81,14 +81,20 @@ static NSString* toBase64(NSData* theData) {
     [weakSelf.viewController presentViewController:self.overlay animated:YES completion:nil];
 }
 
--(void) getDevice:(CDVInvokedUrlCommand*)command {
-    self.hasPendingOperation = YES;
-
-    CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:@"iOS"];
+- (void)getInfo:(CDVInvokedUrlCommand*)command
+{
+    NSDictionary* deviceProperties = [self deviceProperties];
+    CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:deviceProperties];
 
     [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+}
 
-    self.hasPendingOperation = NO;
+- (NSDictionary*)deviceProperties
+{
+    return @{
+             //@"manufacturer": @"Apple",
+             @"platform": @"iOS"
+             };
 }
 
 -(void)dismissCamera{
