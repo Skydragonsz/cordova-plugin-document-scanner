@@ -5,8 +5,8 @@ var utils = require('cordova/utils');
 var exec = require('cordova/exec');
 var cordova = require('cordova');
 
-channel.createSticky('onCordovaInfoReady');
-channel.waitForInitialization('onCordovaInfoReady');
+// channel.createSticky('onCordovaInfoReady');
+// channel.waitForInitialization('onCordovaInfoReady');
 
 var clamp = function(val,minVal,maxVal,defaultVal){
     if(typeof defaultVal !== "undefined") {
@@ -27,7 +27,7 @@ function DocScanner (){
         that.getInfo(function (info) {
             that.active = true;
             that.platform = info.platform;
-            channel.onCordovaInfoReady.fire();
+            // channel.onCordovaInfoReady.fire();
         }, function (e) {
             that.active = false;
             utils.alert('[ERROR] Error initializing Cordova: ' + e);
