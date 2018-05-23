@@ -38,6 +38,9 @@
     <header-file src="src/ios/IPDFCameraViewController.h" />
     <source-file src="src/ios/IPDFCameraViewController.m" />
 
+    <header-file src="src/ios/OrientationHelper.h" />
+    <source-file src="src/ios/OrientationHelper.m" />
+
     <source-file src="src/ios/Images.xcassets/capture_button.imageset/capture_button@2x.png" />
     <source-file src="src/ios/Images.xcassets/focusIndicator.imageset/focusIndicator.png" />
     <source-file src="src/ios/Images.xcassets/focusIndicator.imageset/focusIndicator@2x.png" />
