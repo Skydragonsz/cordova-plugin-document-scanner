@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
     id="cordova-plugin-doc-scanner"
-    version="1.0.0">
+    version="1.0.1">
 
 <name>Document Scanner</name>
 <description>Cordova plugin to scan documents.</description>
