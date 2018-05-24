@@ -431,7 +431,7 @@
 
              CIFilter *transform = [CIFilter filterWithName:@"CIAffineTransform"];
              [transform setValue:enhancedImage forKey:kCIInputImageKey];
-             NSValue *rotation = [NSValue valueWithCGAffineTransform:CGAffineTransformMakeRotation(-90 * (M_PI/180))];
+             NSValue *rotation = [NSValue valueWithCGAffineTransform:CGAffineTransformMakeRotation(-M_PI_2)];
              [transform setValue:rotation forKey:@"inputTransform"];
              enhancedImage = [transform outputImage];
 
