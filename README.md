@@ -24,7 +24,7 @@ This plugin defines a global `DocScanner` object, which provides an API for taki
 
 <a name="module_DocScanner"></a>
 ## DocScanner
-<a name="module_camera.takePicture"></a>
+<a name="module_DocScanner.takePicture"></a>
 ### DocScanner.takePicture(successCallback, errorCallback, options)
 
 Takes a photo using the camera, or retrieves a photo from the device's
